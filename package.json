@@ -1,6 +1,6 @@
 {
     "name"         : "node-red-contrib-fsm",
-    "version"      : "0.0.2",
+    "version"      : "0.0.3",
     "description"  : "FSM - A Finite Statemachine Node",
 	"homepage": "https://github.com/karstenj/node-red-contrib-fsm",
 	"repository": {
