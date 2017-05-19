@@ -1,0 +1,130 @@
+
+<script type="text/x-red" data-template-name="FSM">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-topic"><i class="fa fa-tasks"></i> Topic</label>
+        <input type="text" id="node-input-topic" placeholder="Topic">
+    </div>
+    <div class="form-row">
+        <label for="node-input-initstate"><i class="fa fa-tag"></i> Initial State</label>
+        <input type="text" id="node-input-initstate" placeholder="Initial State">
+    </div>
+    <div  class="form-row" style="width:100%; margin:auto;margin-bottom:10px;">
+        <label for="node-input-rule-container">&nbsp;&#8594; Transitions</label>
+    </div>
+    <div class="form-row node-input-rule-container-row">
+		<div class="red-ui-editableList">
+            <div class="red-ui-editableList-container">
+                <ol id="node-input-rule-container-head" style="min-height:auto; min-width: 450px; height: auto; margin-right:17px;" class="red-ui-editableList-list ui-sortable">
+                    <li class="red-ui-editableList-item-sortable" style="border-bottom:none">
+                        <div class="red-ui-editableList-item-content">
+                            <div style="margin-top:-6px;">
+                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Name</span></span>
+                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Condition</span></span>
+                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Source</span></span>
+                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Destination</span></span>
+                                <span style="float: left; width:20px;"><span class="node-input-rule-index">&nbsp;</span></span>
+                            </div>
+                        </div>
+                        <!-- <i class="red-ui-editableList-item-handle fa fa-bars"></i> -->
+                    </li>
+                </ol>
+            </div>
+        </div>
+	</div>
+	<div class="form-row node-input-rule-container-row" style="margin-top:-9px;">
+		<ol id="node-input-rule-container">
+		</ol>
+	</div>
+</script>
+
+
+<!-- Next, some simple help text is provided for the node.                   -->
+<script type="text/x-red" data-help-name="FSM">
+   <!-- data-help-name identifies the node type this help is for             -->
+   <!-- This content appears in the Info sidebar when a node is selected     -->
+   <!-- The first <p> is used as the pop-up tool tip when hovering over a    -->
+   <!-- node in the palette.                                                 -->
+   <p>A finite state machine(FSM) node. Define transitions by providing a transition name, a condition topic, 
+   a source state and a destination state.</p>
+   <p>The FSM will enter the provided initial state at startup.</p>
+   <p>Received messages at the input will trigger a state transition, if the current state of the FSM matches the
+   state in the source column, the <b>msg.topic</b> equals the condition column in the same row and if the <b>msg.payload</b> contains the value <b>true</b>.</p>
+
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('FSM',{
+        color: '#a6bbcf',
+        category: 'function',   // the palette category
+        defaults: {             // defines the editable properties of the node
+            name: {value:""},   //  along with default values.
+            topic: {value:"", required:true},
+            initstate: {value:"", required:true},
+			rules:{value:[{n:"",c:"",s:"",d:""}]}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "fsm.png",
+        label: function() {
+            return this.name||this.topic||"FSM";
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+		oneditsave: function() {
+			var rules = $('#node-input-rule-container').editableList('items');
+			var node = this;
+			node.rules = [];
+			rules.each(function(i) {
+				var rule = $(this);
+				var r = {
+					n:rule.find(".node-input-rule-property-name").val(),
+					c:rule.find(".node-input-rule-property-cond").val(),
+					s:rule.find(".node-input-rule-property-src").val(),
+					d:rule.find(".node-input-rule-property-dst").val()
+				 };
+				 node.rules.push(r);
+			});
+		},
+		oneditprepare: function() {
+			var node = this;
+            
+			$("#node-input-rule-container").css('min-height','250px').css('min-width','450px').editableList({
+				addItem: function (container, i, opt) {
+					var rule = opt;
+                    var row = $('<div/>').appendTo(container);
+					var nameField = $('<input/>', {class:"node-input-rule-property-name",style:"width:20%; margin-left: 5px; text-align: left;"})
+						.appendTo(row);
+					var condField = $('<input/>', {class:"node-input-rule-property-cond",style:"width:20%; margin-left: 5px; text-align: left;"})
+						.appendTo(row);
+					var sourceField = $('<input/>', {class:"node-input-rule-property-src",style:"width:20%; margin-left: 5px; text-align: left;"})
+						.appendTo(row);
+					var destField = $('<input/>', {class:"node-input-rule-property-dst",style:"width:20%; margin-left: 5px; text-align: left;"})
+						.appendTo(row);
+					nameField.val(rule.n);
+					condField.val(rule.c);
+					sourceField.val(rule.s);
+					destField.val(rule.d);
+				},
+				removeItem: function(opt) {
+				  var rules = $('#node-input-rule-container').editableList('items');
+				  rules.each(function(i) {
+
+					$(this).find('.node-input-rule-index').html(i + 1);
+				  });
+				},
+				sortable: true,
+				removable: true
+			});
+
+            for (var i=0; i<this.rules.length; i++) {
+                var rule = this.rules[i];
+                $("#node-input-rule-container").editableList('addItem',rule);
+            }
+		}
+    });
+</script>

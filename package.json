@@ -1,0 +1,13 @@
+{
+    "name"         : "node-red-contrib-fsm",
+    "version"      : "0.0.1",
+    "description"  : "FSM - A Finite Statemachine Node",
+    "dependencies": {
+    },
+    "keywords": [ ],
+    "node-red"     : {
+        "nodes": {
+            "FSM": "fsm/fsm.js"
+        }
+    }
+}
