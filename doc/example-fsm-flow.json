@@ -1,0 +1,1 @@
+[{"id":"d62e8519.c50e3","type":"FSM","z":"3076c479.e6e044","name":"FSM","topic":"FSM_1","initstate":"ST_RED","rules":[{"n":"TR_GREEN","c":"COND_GREEN","s":"ST_RED","d":"ST_GREEN"},{"n":"TR_RED","c":"COND_RED","s":"ST_GREEN","d":"ST_RED"}],"x":316,"y":78,"wires":[["8f98729.e922e9"]]}]
