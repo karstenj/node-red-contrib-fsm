@@ -2,12 +2,14 @@
 Modelling a FSM in node-red can become very painful. This node offers a simple approach of modelling state based processing of messages in node-red.
 
 [![node-red-contrib-fsm](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/node-fsm.png)](https://github.com/karstenj/node-red-contrib-fsm)
+
 ## Install
 Download the package from GitHub and execute:
 ```sh
 $ cd node-red-contrib-fsm
 $ npm install .
 ```
+
 ## Description
 For each state transition you have to configure the name of the transition, the condition topic, the source state and the destination state. Received messages at the input will trigger a state transition, if the current state of the FSM matches the state in the source column, the msg.topic equals the condition column in the same row and if the msg.payload contains the boolean value 'true'.
 
