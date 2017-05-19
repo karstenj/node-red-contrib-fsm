@@ -12,7 +12,7 @@
 	},
     "dependencies": {
     },
-    "keywords": [ ],
+    "keywords": [ "node-red" ],
     "node-red"     : {
         "nodes": {
             "FSM": "fsm/fsm.js"
