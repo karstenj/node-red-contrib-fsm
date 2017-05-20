@@ -6,8 +6,8 @@ Modelling a FSM in node-red can become very painful. This node offers a simple a
 ## Install
 Download the package from GitHub and execute:
 ```sh
-$ cd node-red-contrib-fsm
-$ npm install .
+$ cd cd ~/.node-red
+$ npm install node-red-contrib-fsm
 ```
 
 ## Description
@@ -40,9 +40,22 @@ The flow in node-red:
 
 The switch nodes filter the result message of FSM for the entry event of the states and the change node generates the final action of switching the traffic lights.
 
+The exported flow can be downloaded from here: <https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-flow.json>.
+
 The FSM node is configured as shown in the UML state diagram.
 
 ![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-config.png)
+
+## Developers
+```sh
+$ cd ~/.node-red/node-modules
+$ git clone https://github.com/karstenj/node-red-contrib-fsm.git
+cd node-red-contrib-fsm
+npm install
+```
+
+## Discussions and suggestions
+There is a google group: <https://groups.google.com/forum/#!forum/node-red-contrib-fsm>
 
 ## Further Improvements
 
