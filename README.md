@@ -21,16 +21,19 @@ In node-red-contrib-fsm you have to configure the following properties:
     * The topic is used for the output message
   - Initial State
     * The state which is entered at startup
+  - Initial Transition
+    * The name of the initial transition
+  - The output message configuration
+    * Transition - output message is generated for a state transition. The name which has been entered in the transition name column is returned in the message payload.
+    * State Entry - output message is generated for a state entry event. The name which has been entered in the destination name column appended by '_entry' is returned in the message payload.
+    * State Exit - output message is generated for a state exit event. The name which has been entered in the source name column appended by '_exit' is returned in the message payload.
   - Transition(s)
     * 'Name' - Name of the transition
     * 'Source' - the source state
     * 'Destination' - the destination state
     * 'Condition' - the condition topic of the input message
     * 'Cond.State' - the state (true or false) of the input payload
-  - msg.payload
-    * For a transisition the name of the transition will be returned
-    * '_entry' is appended for the target state name
-    * '_exit' is appended for the source state name
+	
     
 ## Example
 
@@ -44,13 +47,16 @@ The flow in node-red:
 
 The switch nodes filter the result message of FSM for the entry event of the states and the change node generates the final action of switching the traffic lights.
 
-The exported flow can be downloaded from here: <https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-flow.json>.
+The exported flow can be downloaded from here: [FLOW](https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-flow.json).
 
 The FSM node is configured as shown in the UML state diagram.
 
 ![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-config.png)
 
-### UK Traffic Light Simulator (thanks to [TotallyInformation]https://github.com/TotallyInformation)
+### UK Traffic Light Simulator 
+
+Thanks to [TotallyInformation](https://github.com/TotallyInformation) for providing this example and feedback on the FSM node.
+
 Note that under UK law, the amber light must
 be showing for 3 seconds.
 
@@ -62,17 +68,13 @@ Sequence is:
   - AMBER
   - RED
 
-In this finite state machine, we only need
-one condition, called `CHANGE` since we only
-need to rotate through each state in turn.
+In this finite state machine, we only need one condition, called `CHANGE` since we only need to rotate through each state in turn.
 
-In this flow example, we use the transition
-output to control the sequence and take the
-entry output as the actual light(s) showing.
+In this flow example, we use the transition output to control the sequence and take the entry output as the actual light(s) showing.
 
 ![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-uk-traffic-light-flow.png)
 
-The exported flow can be downloaded from here: <[FLOW]https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-uk-traffic-light-flow.json>.
+The exported flow can be downloaded from here: [FLOW](https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-uk-traffic-light-flow.json).
 
 ## Developers
 ```sh
