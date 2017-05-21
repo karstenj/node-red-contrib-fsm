@@ -10,6 +10,13 @@ $ cd cd ~/.node-red
 $ npm install node-red-contrib-fsm
 ```
 
+## Changes
+
+  - 0.0.6
+    * Added condition state selection in transition configuration
+    * Selection of output message (transition, state entry and state exit)
+	* Output message topic does not contain FSM event information => moved to payload property
+
 ## Description
 For each state transition you have to configure the name of the transition, the condition topic, the source state and the destination state. Received messages at the input will trigger a state transition, if the current state of the FSM matches the state in the source column, the msg.topic equals the condition column in the same row and if the msg.payload contains the boolean value 'true'.
 
