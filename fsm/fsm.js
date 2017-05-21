@@ -22,12 +22,20 @@ module.exports = function(RED) {
 
         this.topic = n.topic;
         this.initstate = n.initstate;
+        this.inittran = n.inittran;
+        this.entry = n.entry;
+        this.exit = n.exit;
+        this.tran = n.tran;
         this.state = 'unknown';
         this.rules = n.rules;
 
         var node = this;
 		//node.warn("Rules: "+this.rules.length);
 		//node.warn("State: "+this.state);
+		
+		if (!node.entry && !node.exit && !node.tran) {
+			node.tran = true;
+		}
 
 		setTimeout( function() { node.emit("input",{}); }, 100 );
 
@@ -36,41 +44,48 @@ module.exports = function(RED) {
 			if (msg.payload == null) {
 				//node.warn("Init");
 				var outMsg = {};
+				outMsg.topic = node.topic;
 				node.state = node.initstate;
-				outMsg.topic = this.topic + '_transition';
-				outMsg.payload = "init"
-				this.send(outMsg);
-				outMsg.topic = this.topic + '_entry';
-				outMsg.payload = this.state;
-				this.send(outMsg);
+				if (node.tran) {
+					outMsg.payload = node.inittran
+					node.send(outMsg);
+				}
+				if (node.entry) {
+					outMsg.payload = node.state + '_entry';
+					node.send(outMsg);
+				}
 				node.status({fill:"green",shape:"dot",text:node.state});
 			} else {
 				//node.warn("Condition topic: "+msg.topic);
 				//node.warn("Condition payload: "+msg.payload);
-				if (typeof msg.payload === "boolean" && msg.payload) {
+				if (typeof msg.payload === "boolean") {
 					var found = false;
 					for (var i = 0; i < node.rules.length; i++) {
 						//node.warn("rule.s: "+node.rules[i].s);
 						//node.warn("rule.c: "+node.rules[i].c);
-						if (node.rules[i].s == node.state && node.rules[i].c == msg.topic) {
+						if (node.rules[i].s == node.state && node.rules[i].c == msg.topic && ((msg.payload && node.rules[i].t) || (!msg.payload && !node.rules[i].t))) {
 							node.status({fill:"green",shape:"dot",text:node.rules[i].s+" => "+node.rules[i].d});
 							node.state = node.rules[i].d;
 							var outMsg = {};
-							outMsg.topic = node.topic + '_exit';
-							outMsg.payload = node.rules[i].s;
-							node.send(outMsg);
-							outMsg.topic = node.topic + '_transition';
-							outMsg.payload = node.rules[i].n;
-							node.send(outMsg);
-							outMsg.topic = node.topic + '_entry';
-							outMsg.payload = node.rules[i].d;
-							node.send(outMsg);
+							outMsg.topic = node.topic;
+							if (node.exit) {
+								outMsg.payload = node.rules[i].s + '_exit';
+								node.send(outMsg);
+							}
+							if (node.tran) {
+								outMsg.payload = node.rules[i].n;
+								node.send(outMsg);
+							}
+							if (node.entry) {
+								outMsg.payload = node.rules[i].d + '_entry';
+								node.send(outMsg);
+							}
 							found = true;
 							break;
 						}
 					}
 					if (!found) {
-						node.status({fill:"gray",shape:"ring",text:"Act: "+node.state+" - NoTr: " + msg.topic});
+						node.status({fill:"gray",shape:"ring",text:"Act: "+node.state+" - NoTr: " + msg.topic + " " + msg.payload});
 					}
 				} else {
 					node.status({fill:"green",shape:"dot",text:node.state});

@@ -19,18 +19,22 @@ In node-red-contrib-fsm you have to configure the following properties:
     * Just the name of the FSM node
   - Topic
     * The topic is used for the output message
-    * '_transition' is appended for the transition message
-    * '_entry' is appended for the target state entry
-    * '_exit' is appended for the source state exit
   - Initial State
     * The state which is entered at startup
   - Transition(s)
     * 'Name' - Name of the transition
-    * 'Condition' - the condition topic of the input message
     * 'Source' - the source state
     * 'Destination' - the destination state
+    * 'Condition' - the condition topic of the input message
+    * 'Cond.State' - the state (true or false) of the input payload
+  - msg.payload
+    * For a transisition the name of the transition will be returned
+    * '_entry' is appended for the target state name
+    * '_exit' is appended for the source state name
     
 ## Example
+
+### Simple pedestrian light with manual trigger
 The following example demonstrates the FSM node for a simple pedestrian traffic light state machine. It has two states ST_RED and ST_GREEN, where the related light gets switched on. The ST_RED state is entered at statup. The transitions between the two states are triggered by COND_GREEN and COND_RED repectively.
 
 ![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-uml.png)
@@ -45,6 +49,30 @@ The exported flow can be downloaded from here: <https://github.com/karstenj/node
 The FSM node is configured as shown in the UML state diagram.
 
 ![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-config.png)
+
+### UK Traffic Light Simulator (thanks to [TotallyInformation]https://github.com/TotallyInformation)
+Note that under UK law, the amber light must
+be showing for 3 seconds.
+
+Sequence is:
+
+  - RED
+  - RED+AMBER
+  - GREEN
+  - AMBER
+  - RED
+
+In this finite state machine, we only need
+one condition, called `CHANGE` since we only
+need to rotate through each state in turn.
+
+In this flow example, we use the transition
+output to control the sequence and take the
+entry output as the actual light(s) showing.
+
+![FSM](https://github.com/karstenj/node-red-contrib-fsm/raw/master/doc/example-fsm-uk-traffic-light-flow.png)
+
+The exported flow can be downloaded from here: <[FLOW]https://github.com/karstenj/node-red-contrib-fsm/blob/master/doc/example-fsm-uk-traffic-light-flow.json>.
 
 ## Developers
 ```sh

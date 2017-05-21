@@ -12,6 +12,19 @@
         <label for="node-input-initstate"><i class="fa fa-tag"></i> Initial State</label>
         <input type="text" id="node-input-initstate" placeholder="Initial State">
     </div>
+    <div class="form-row">
+        <label for="node-input-inittran"><i class="fa fa-tag"></i> Init Transition</label>
+        <input type="text" id="node-input-inittran" placeholder="Initial Transition Name">
+    </div>
+    <div class="form-row">
+        <label>Trigger msg on:</label>
+        <input type="checkbox" id="node-input-entry" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-entry">State Entry</label>
+        <input type="checkbox" id="node-input-exit" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-exit">State Exit</label>
+        <input type="checkbox" id="node-input-tran" style="display: inline-block; width: auto; vertical-align: top;">
+        <label for="node-input-tran">Transition</label>
+    </div>
     <div  class="form-row" style="width:100%; margin:auto;margin-bottom:10px;">
         <label for="node-input-rule-container">&nbsp;&#8594; Transitions</label>
     </div>
@@ -22,10 +35,11 @@
                     <li class="red-ui-editableList-item-sortable" style="border-bottom:none">
                         <div class="red-ui-editableList-item-content">
                             <div style="margin-top:-6px;">
-                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Name</span></span>
-                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Condition</span></span>
-                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Source</span></span>
-                                <span style="float: left; width:20%; margin-left: 5px;"><span class="node-input-rule-property-name">Destination</span></span>
+                                <span style="float: left; width:18%; margin-left: 5px;"><span class="node-input-rule-property-name">Name</span></span>
+                                <span style="float: left; width:18%; margin-left: 5px;"><span class="node-input-rule-property-name">Source</span></span>
+                                <span style="float: left; width:18%; margin-left: 5px;"><span class="node-input-rule-property-name">Destination</span></span>
+                                <span style="float: left; width:18%; margin-left: 5px;"><span class="node-input-rule-property-name">Condition</span></span>
+                                <span style="float: left; width:15%; margin-left: 5px;"><span class="node-input-rule-property-name">Cond.State</span></span>
                                 <span style="float: left; width:20px;"><span class="node-input-rule-index">&nbsp;</span></span>
                             </div>
                         </div>
@@ -64,7 +78,11 @@
             name: {value:""},   //  along with default values.
             topic: {value:"", required:true},
             initstate: {value:"", required:true},
-			rules:{value:[{n:"",c:"",s:"",d:""}]}
+            inittran: {value:"TR_INIT", required:true},
+            entry: {value:false},
+            exit: {value:false},
+            tran: {value:true},
+			rules:{value:[]}
         },
         inputs:1,
         outputs:1,
@@ -85,7 +103,8 @@
 					n:rule.find(".node-input-rule-property-name").val(),
 					c:rule.find(".node-input-rule-property-cond").val(),
 					s:rule.find(".node-input-rule-property-src").val(),
-					d:rule.find(".node-input-rule-property-dst").val()
+					d:rule.find(".node-input-rule-property-dst").val(),
+					t:rule.find(".node-input-rule-property-cond-state").val()
 				 };
 				 node.rules.push(r);
 			});
@@ -93,22 +112,27 @@
 		oneditprepare: function() {
 			var node = this;
             
-			$("#node-input-rule-container").css('min-height','250px').css('min-width','450px').editableList({
+			$("#node-input-rule-container").css('min-height','250px').css('min-width','500px').editableList({
 				addItem: function (container, i, opt) {
 					var rule = opt;
                     var row = $('<div/>').appendTo(container);
-					var nameField = $('<input/>', {class:"node-input-rule-property-name",style:"width:20%; margin-left: 5px; text-align: left;"})
+					var nameField = $('<input/>', {class:"node-input-rule-property-name",style:"width:18%; margin-left: 5px; text-align: left;"})
 						.appendTo(row);
-					var condField = $('<input/>', {class:"node-input-rule-property-cond",style:"width:20%; margin-left: 5px; text-align: left;"})
+					var sourceField = $('<input/>', {class:"node-input-rule-property-src",style:"width:18%; margin-left: 5px; text-align: left;"})
 						.appendTo(row);
-					var sourceField = $('<input/>', {class:"node-input-rule-property-src",style:"width:20%; margin-left: 5px; text-align: left;"})
+					var destField = $('<input/>', {class:"node-input-rule-property-dst",style:"width:18%; margin-left: 5px; text-align: left;"})
 						.appendTo(row);
-					var destField = $('<input/>', {class:"node-input-rule-property-dst",style:"width:20%; margin-left: 5px; text-align: left;"})
+					var condField = $('<input/>', {class:"node-input-rule-property-cond",style:"width:18%; margin-left: 5px; text-align: left;"})
 						.appendTo(row);
+                    var selectField = $('<select/>',{class:"node-input-rule-property-cond-state",style:"width:15%; margin-left: 5px; text-align: center;"})
+						.appendTo(row);
+					selectField.append($("<option></option>").val(false).text("false"));
+					selectField.append($("<option></option>").val(true).text("true"));
 					nameField.val(rule.n);
 					condField.val(rule.c);
 					sourceField.val(rule.s);
 					destField.val(rule.d);
+					selectField.val(rule.t || true);
 				},
 				removeItem: function(opt) {
 				  var rules = $('#node-input-rule-container').editableList('items');
