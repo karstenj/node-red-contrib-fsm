@@ -93,62 +93,61 @@
         labelStyle: function() {
             return this.name?"node_label_italic":"";
         },
-		oneditsave: function() {
-			var rules = $('#node-input-rule-container').editableList('items');
-			var node = this;
-			node.rules = [];
-			rules.each(function(i) {
-				var rule = $(this);
-				var r = {
-					n:rule.find(".node-input-rule-property-name").val(),
-					c:rule.find(".node-input-rule-property-cond").val(),
-					s:rule.find(".node-input-rule-property-src").val(),
-					d:rule.find(".node-input-rule-property-dst").val(),
-					t:rule.find(".node-input-rule-property-cond-state").val()
-				 };
-				 node.rules.push(r);
-			});
-		},
-		oneditprepare: function() {
-			var node = this;
-            
-			$("#node-input-rule-container").css('min-height','250px').css('min-width','500px').editableList({
-				addItem: function (container, i, opt) {
-					var rule = opt;
-                    var row = $('<div/>').appendTo(container);
-					var nameField = $('<input/>', {class:"node-input-rule-property-name",style:"width:18%; margin-left: 5px; text-align: left;"})
-						.appendTo(row);
-					var sourceField = $('<input/>', {class:"node-input-rule-property-src",style:"width:18%; margin-left: 5px; text-align: left;"})
-						.appendTo(row);
-					var destField = $('<input/>', {class:"node-input-rule-property-dst",style:"width:18%; margin-left: 5px; text-align: left;"})
-						.appendTo(row);
-					var condField = $('<input/>', {class:"node-input-rule-property-cond",style:"width:18%; margin-left: 5px; text-align: left;"})
-						.appendTo(row);
-                    var selectField = $('<select/>',{class:"node-input-rule-property-cond-state",style:"width:15%; margin-left: 5px; text-align: center;"})
-						.appendTo(row);
-					selectField.append($("<option></option>").val(false).text("false"));
-					selectField.append($("<option></option>").val(true).text("true"));
-					nameField.val(rule.n);
-					condField.val(rule.c);
-					sourceField.val(rule.s);
-					destField.val(rule.d);
-					selectField.val(rule.t || true);
-				},
-				removeItem: function(opt) {
-				  var rules = $('#node-input-rule-container').editableList('items');
-				  rules.each(function(i) {
+	oneditsave: function() {
+		var rules = $('#node-input-rule-container').editableList('items');
+		var node = this;
+		node.rules = [];
+		rules.each(function(i) {
+			var rule = $(this);
+			var r = {
+				n: rule.find(".node-input-rule-property-name").val(),
+				c: rule.find(".node-input-rule-property-cond").val(),
+				s: rule.find(".node-input-rule-property-src").val(),
+				d: rule.find(".node-input-rule-property-dst").val(),
+				t: rule.find(".node-input-rule-property-cond-state").val() == 'true' // convert to boolean
+			 };
+			 node.rules.push(r);
+		});
+	},
+	oneditprepare: function() {
+		var node = this;
 
+		$("#node-input-rule-container").css('min-height','250px').css('min-width','500px').editableList({
+			addItem: function (container, i, opt) {
+				var rule = opt;
+				var row = $('<div/>').appendTo(container);
+				var nameField = $('<input/>', {class:"node-input-rule-property-name",style:"width:18%; margin-left: 5px; text-align: left;"})
+					.appendTo(row);
+				var sourceField = $('<input/>', {class:"node-input-rule-property-src",style:"width:18%; margin-left: 5px; text-align: left;"})
+					.appendTo(row);
+				var destField = $('<input/>', {class:"node-input-rule-property-dst",style:"width:18%; margin-left: 5px; text-align: left;"})
+					.appendTo(row);
+				var condField = $('<input/>', {class:"node-input-rule-property-cond",style:"width:18%; margin-left: 5px; text-align: left;"})
+					.appendTo(row);
+				var selectField = $('<select/>',{class:"node-input-rule-property-cond-state",style:"width:15%; margin-left: 5px; text-align: center;"})
+					.appendTo(row);
+				selectField.append($("<option></option>").val(false).text("false"));
+				selectField.append($("<option></option>").val(true).text("true"));
+				nameField.val(rule.n);
+				condField.val(rule.c);
+				sourceField.val(rule.s);
+				destField.val(rule.d);
+				selectField.val(rule.t || true);
+			},
+			removeItem: function(opt) {
+				var rules = $('#node-input-rule-container').editableList('items');
+				rules.each(function(i) {
 					$(this).find('.node-input-rule-index').html(i + 1);
-				  });
-				},
-				sortable: true,
-				removable: true
-			});
+				});
+			},
+			sortable: true,
+			removable: true
+		});
 
-            for (var i=0; i<this.rules.length; i++) {
-                var rule = this.rules[i];
-                $("#node-input-rule-container").editableList('addItem',rule);
-            }
+		for (var i=0; i<this.rules.length; i++) {
+			var rule = this.rules[i];
+			$("#node-input-rule-container").editableList('addItem',rule);
 		}
+	}
     });
 </script>
