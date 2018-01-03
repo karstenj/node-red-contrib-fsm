@@ -132,7 +132,7 @@
 				condField.val(rule.c);
 				sourceField.val(rule.s);
 				destField.val(rule.d);
-				selectField.val(rule.t || true);
+				selectField.val(rule.t ? 'true' : 'false');
 			},
 			removeItem: function(opt) {
 				var rules = $('#node-input-rule-container').editableList('items');
